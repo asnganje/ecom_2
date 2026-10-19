@@ -5,6 +5,9 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 class Settings(BaseSettings):
     database_url:str
+    jwt_secret:str
+    jwt_algorithm:str
+    api_path:str
 
     model_config = SettingsConfigDict(
         env_file=".env"
