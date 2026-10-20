@@ -18,3 +18,6 @@ class UserRead(UserBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class UserUpdate(BaseModel):
+    fullname:str|None = None

@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-
-from app.database.session import settings
 from app.modules.auth.router import router as auth_router
+from app.modules.users.router import router as users_router
+from app.modules.category.router import router as category_router
+from app.modules.users.service import UserService
+from app.database.session import SessionLocal
 
 app = FastAPI(
     title="Ecommerce Application",
@@ -9,9 +11,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
+db=SessionLocal()
+UserService(db).ensure_admin_user()
 @app.get("/")
 def root():
     return {
         "msg":"Welcome to the ecommerce intelligence API"
     }
-app.include_router(auth_router, prefix=settings.api_path, tags=["Auth"])
+api_path="/api/v1"
+app.include_router(auth_router, prefix=api_path, tags=["Auth"])
+app.include_router(users_router, prefix=api_path, tags=["Users"])
+app.include_router(category_router, prefix=api_path, tags=["Categories"])
