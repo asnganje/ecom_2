@@ -1,0 +1,28 @@
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.modules.products.model import Product
+
+
+class ProductRepository:
+    def __init__(self, db: Session):
+        self.db = db
+    def get_all(self)->list[Product]:
+        statement = select(Product)
+        return self.db.scalar(statement)
+    def get_by_id(self, product_id:int)->Product | None:
+        return self.db.get(Product, product_id)
+    def create_product(self, product:Product)->Product:
+        self.db.add(product)
+        self.db.commit()
+        self.db.refresh(product)
+        return product
+    def update_product(self,product:Product)->Product:
+        self.db.commit()
+        self.db.refresh(product)
+        return product
+    def delete_product(self, product:Product)->None:
+        self.db.delete(product)
+        self.db.commit()
+
+
