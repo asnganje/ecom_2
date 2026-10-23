@@ -5,7 +5,7 @@ class SpecificationItem(BaseModel):
     name:str
     value:str
 
-class Specification:
+class Specification(BaseModel):
     section:str
     features:list[SpecificationItem]
 
@@ -46,6 +46,6 @@ class ProductUpdate(BaseModel):
 
 class ProductRead(ProductBase):
     id:int
-    selling_price:float|None
+    selling_price:float|None=None
 
     model_config = ConfigDict(from_attributes=True)

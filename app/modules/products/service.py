@@ -16,7 +16,9 @@ class ProductService:
         return payload
     def list_products(self)->list[ProductRead]:
         products = self.product_repository.get_all()
-        return [self._serialized_product(product) for product in products]
+        if products is not None and len(products) > 0:
+            return [self._serialized_product(product) for product in products]
+        return []
     def get_product(self, product_id:int)->ProductRead:
         product = self.product_repository.get_by_id(product_id)
         if product is None:

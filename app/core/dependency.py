@@ -3,12 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
 from app.database.session import SessionLocal
-from fastapi.security import  OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from app.modules.users.repository import UserRepository
 
-oath2_schema = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
-
+oath2_schema = HTTPBearer()
 def get_db():
     db = SessionLocal()
     try:
@@ -16,7 +15,8 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(token:str=Depends(oath2_schema), db: Session = Depends(get_db)):
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(oath2_schema), str=Depends(oath2_schema), db: Session = Depends(get_db)):
+    token = credentials.credentials
     payload = decode_access_token(token)
     subject = payload.get("sub")
     if subject is None:

@@ -9,7 +9,7 @@ class ProductRepository:
         self.db = db
     def get_all(self)->list[Product]:
         statement = select(Product)
-        return self.db.scalar(statement)
+        return self.db.scalars(statement).all()
     def get_by_id(self, product_id:int)->Product | None:
         return self.db.get(Product, product_id)
     def create_product(self, product:Product)->Product:
