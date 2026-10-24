@@ -93,6 +93,13 @@ class ProductService:
             "msg":"Product deleted successfully!"
         }
 
+    def search_product(self, query:str)->list[ProductRead]:
+        products = self.product_repository.search(query)
+
+        return [self._serialized_product(product) for product in products]
+
+
+
 
 
 

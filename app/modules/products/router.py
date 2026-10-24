@@ -25,6 +25,12 @@ def list_products(
     response = service.list_products(page, limit, category_id, brand_name, is_active, min_price, max_price, sort_price)
     return response
 
+@router.get("/search", status_code=status.HTTP_200_OK, response_model=list[ProductRead])
+def search_product(query:str=Query(..., min_length=1), db:Session=Depends(get_db)):
+    service = ProductService(db)
+    products = service.search_product(query)
+    return products
+
 @router.get("/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductRead)
 def get_product(product_id:int, db:Session=Depends(get_db)):
     service = ProductService(db)
@@ -65,4 +71,5 @@ def delete_product(product_id:int, current_user:User=Depends(get_current_user), 
     return {
         "msg":"Product successfully deleted"
     }
+
 
