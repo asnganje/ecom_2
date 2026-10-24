@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.dependency import get_db, get_current_user
@@ -9,11 +9,21 @@ from app.modules.users.schema import UserRole
 
 router = APIRouter(prefix="/products")
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=list[ProductRead])
-def list_products(db: Session=Depends(get_db)):
+@router.get("/", status_code=status.HTTP_200_OK, response_model=dict)
+def list_products(
+        page:int = Query(default=1, ge=1),
+        limit:int = Query(default=1, ge=1, le=100),
+        category_id: int | None = Query(default=None, ge=1),
+        brand_name: str | None = Query(default=None, min_length=1),
+        is_active: bool | None = Query(default=None),
+        min_price: float | None = Query(default=None, ge=0),
+        max_price: float | None = Query(default=None, ge=0),
+        sort_price: str | None = Query(default=None, pattern="^(asc|desc)"),
+        db: Session=Depends(get_db)
+        ):
     service = ProductService(db)
-    products = service.list_products()
-    return products
+    response = service.list_products(page, limit, category_id, brand_name, is_active, min_price, max_price, sort_price)
+    return response
 
 @router.get("/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductRead)
 def get_product(product_id:int, db:Session=Depends(get_db)):

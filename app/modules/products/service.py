@@ -1,3 +1,5 @@
+from math import ceil
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.common.price import calculate_selling_price
@@ -14,11 +16,44 @@ class ProductService:
         payload = ProductRead.model_validate(product)
         payload.selling_price = calculate_selling_price(payload.price, payload.discount_percent)
         return payload
-    def list_products(self)->list[ProductRead]:
-        products = self.product_repository.get_all()
-        if products is not None and len(products) > 0:
-            return [self._serialized_product(product) for product in products]
-        return []
+    def list_products(self,
+                      page:int,
+                      limit:int,
+                      category_id: int | None = None,
+                      brand_name: str | None = None,
+                      is_active: bool | None = None,
+                      min_price: float | None = None,
+                      max_price: float | None = None,
+                      sort_price: str | None = None
+                      )->dict:
+        products, total = self.product_repository.get_all(page,
+                                                          limit,
+                                                          category_id,
+                                                          brand_name,
+                                                          is_active,
+                                                          min_price,
+                                                          max_price,
+                                                          sort_price
+                                                          )
+        if len(products) <= 0:
+            return {
+                "products": [],
+                "pagination": {
+                    "limit": limit,
+                    "page": page,
+                    "total": total
+            }}
+
+        payload = [self._serialized_product(product) for product in products]
+        return {
+                "products":payload,
+                "pagination":{
+                "limit":limit,
+                "page":page,
+                "total":total,
+                "total_pages":ceil(total/limit)
+            }
+        }
     def get_product(self, product_id:int)->ProductRead:
         product = self.product_repository.get_by_id(product_id)
         if product is None:
