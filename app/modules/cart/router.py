@@ -30,7 +30,7 @@ def remove_cart_item(item_id:int, current_user:User = Depends(get_current_user),
     cart_service=CartService(db)
     return cart_service.remove_item(current_user, item_id)
 
-@router.delete("/me", status_code=status.HTTP_200_OK, response_model=CartRead)
+@router.delete("/clear", status_code=status.HTTP_200_OK, response_model=CartRead)
 def clear_cart( current_user:User = Depends(get_current_user), db: Session=Depends(get_db)):
     cart_service=CartService(db)
     return cart_service.clear_cart(current_user)

@@ -1,14 +1,13 @@
 from pydantic import BaseModel, Field
 
 
-class CartProductSummary:
+class CartProductSummary(BaseModel):
     id:int
     name: str
     discount_percent: float
     price: float
     image_url: str
     selling_price:float
-
 
 class CartItemRead(BaseModel):
     id:int
