@@ -21,7 +21,7 @@ class AddressService:
     def get_address(self, current_user:User, address_id:int)->AddressRead:
         user_id=current_user.id
         db_address=self.address_repository.get_address_by_id(address_id)
-        if db_address.user_id != user_id or db_address is None:
+        if db_address is None or db_address.user_id != user_id:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Address not found"
