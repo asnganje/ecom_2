@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.modules.address.model import Address
 
 
-class repository:
+class AddressRepository:
     def __init__(self, db:Session):
         self.db=db
     def get_address_by_id(self, address_id:int)->Address | None:
