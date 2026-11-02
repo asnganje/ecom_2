@@ -4,3 +4,4 @@ from app.modules.products.model import Product
 from app.modules.cart.model import Cart
 from app.modules.cart.model import CartItem
 from app.modules.address.model import Address
+from app.modules.order.model import Order, OrderItem
