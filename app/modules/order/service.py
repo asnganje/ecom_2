@@ -97,7 +97,12 @@ class OrderService:
     def list_my_orders(self, current_user:User)->list[OrderRead]:
         orders = self.order_repository.get_order_by_user_id(current_user.id)
         return [self._dump_order(order) for order in orders]
-    def list_all_orders(self)->list[OrderRead]:
+    def list_all_orders(self, current_user:User)->list[OrderRead]:
+        if current_user.role != UserRole.ADMIN.value:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Access denied!"
+            )
         orders = self.order_repository.get_all()
         return [self._dump_order(order) for order in orders]
     def get_order(self, order_id:int, current_user:User)->OrderRead:
@@ -113,12 +118,17 @@ class OrderService:
                 detail="Access denied!"
             )
         return self._dump_order(order)
-    def update_order_status(self, order_id:int, payload:OrderStatusUpdate)->OrderRead:
+    def update_order_status(self, order_id:int, current_user:User, payload:OrderStatusUpdate)->OrderRead:
         order = self.order_repository.get_order_by_id(order_id)
         if order is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Order not found!"
+            )
+        if  current_user.role != UserRole.ADMIN.value:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Access denied!"
             )
         order.status=payload.status.value
         db_order = self.order_repository.update_order(order)

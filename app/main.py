@@ -5,6 +5,7 @@ from app.modules.category.router import router as category_router
 from app.modules.products.router import router as product_router
 from app.modules.cart.router import router as cart_router
 from app.modules.address.router import router as address_router
+from app.modules.order.router import router as order_router
 from app.modules.users.service import UserService
 from app.database.session import SessionLocal
 
@@ -28,3 +29,4 @@ app.include_router(category_router, prefix=api_path, tags=["Categories"])
 app.include_router(product_router, prefix=api_path, tags=["Products"])
 app.include_router(cart_router, prefix=api_path, tags=["Carts"])
 app.include_router(address_router, prefix=api_path, tags=["Address"])
+app.include_router(order_router, prefix=api_path, tags=["Orders"])
