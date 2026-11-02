@@ -19,7 +19,7 @@ class OrderService:
         self.cart_repository=CartRepository(db)
         self.product_repository=ProductRepository(db)
     def _dump_order(self, order:Order)->OrderRead:
-        order_items = self.order_repository.get_order_by_id(order.id)
+        order_items = self.order_repository.get_items_by_order_id(order.id)
 
         order_read = OrderRead(
             id=order.id,

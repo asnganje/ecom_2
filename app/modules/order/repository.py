@@ -27,7 +27,7 @@ class OrderRepository:
         self.db.flush()
         for item in order_items:
             item.order_id = order.id
-        self.db.add(order_items)
+            self.db.add(item)
         for item in cart_items:
             self.db.delete(item)
         self.db.commit()
