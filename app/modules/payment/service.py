@@ -57,7 +57,7 @@ class PaymentService:
             amount=order.total_amount,
             currency="USER",
             status=PaymentStatus.PENDING.value,
-            payment_link="dummy link",
+            payment_link_url="dummy link",
             provider_payment_link_id="dummy link id"
         )
 
