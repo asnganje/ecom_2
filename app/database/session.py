@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     jwt_algorithm:str
     admin_email:str
     admin_password:str
+    stripe_secret_key:str
 
     model_config = SettingsConfigDict(
         env_file=".env"
